@@ -45,3 +45,8 @@ std::string Book::displayString() const {
   result += " left.";
   return result;
 }
+
+
+void Book::dump(ostream& os) const {
+  os << category_ << "\n" << name_ << "\n" << price_ << "\n" << qty_ << "\n" << isbn_ << "\n" << author_ << endl;
+}

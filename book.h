@@ -21,6 +21,11 @@ public:
     */
   std::string displayString() const;
 
+  /**
+     * Outputs the product info in the database format
+     */
+  void dump(std::ostream& os) const;
+  
 private:
   std::string isbn_;
   std::string author_;

@@ -21,6 +21,10 @@ public:
     */
   std::string displayString() const;
 
+  /**
+     * Outputs the product info in the database format
+     */
+  void dump(std::ostream& os) const;
 private:
   std::string size_;
   std::string brand_;
