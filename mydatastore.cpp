@@ -70,37 +70,60 @@ std::vector<Product*> MyDataStore::search(std::vector<std::string>& terms, int t
   // make a big string of all the strings in the given vector terms
   // so i can parse it into words with my function
   string combinedTerms = "";
+  set<string> isbns;
   for(size_t i=0; i<terms.size() - 1; i++){
-    combinedTerms = combinedTerms + terms[i] + " ";
+    string currTerm = terms[i];
+    // check if it's an ISBN number; if it is, skip it
+    if (currTerm.length() == 15){
+      if (currTerm[3] == '-' && currTerm[13] == '-'){
+        isbns.insert(currTerm);
+        i++;
+      } else {
+        combinedTerms += (currTerm + " ");
+      }
+    }
   }
-  combinedTerms += terms[terms.size()-1];
+  // check if last term is an isbn; if so, skip it
+  if (terms[terms.size()-1].length() == 15){
+    string currTerm = terms[terms.size()-1];
+    if (currTerm[3] == '-' && currTerm[13] == '-'){
+      isbns.insert(currTerm);
+    } else {
+      combinedTerms += terms[terms.size()-1];
+    }
+  } 
 
   // call parseStringToWords on this big one
   set<string> parsedTerms = parseStringToWords(combinedTerms);
+  parsedTerms = setUnion(parsedTerms, isbns);
   set<string>::iterator it;
 
   vector<Product*> result;
   set<Product*> almostResult;
   if(type == 0){
     // AND search means that it must have all terms. so just use the first
-    set<Product*> temp = keywordProdMap_[*parsedTerms.begin()];
-    bool allfound = true;
-    set<Product*>::iterator it2 = temp.begin();
-    for(it2 = temp.begin(); it2 != temp.end(); ++it2){
-      for(it = parsedTerms.begin(); it != parsedTerms.end(); ++it){
-        if((*it2)->keywords().find(*it) == (*it2)->keywords().end()){
-          allfound = false;
-        }
-      }
+    for (it = parsedTerms.begin(); it != parsedTerms.end(); ++it){
+      map<string, set<Product*>>::iterator mapit = keywordProdMap_.find(*it);
+      if (mapit != keywordProdMap_.end()) {
+        set<Product*> temp = keywordProdMap_[*it];
 
-      if (allfound) {
-        almostResult.insert(*it2);
+        if (almostResult.empty()){
+          almostResult = keywordProdMap_[*it];
+        } else {
+          set<Product*> andedSet = setIntersection(almostResult, temp);
+          almostResult = andedSet;
+        }
       }
     }
   } else if (type == 1) { 
+    // OR search means return all the products that have ANY of the terms
     for(it = parsedTerms.begin(); it != parsedTerms.end(); ++it){
-      set<Product*> temp = keywordProdMap_[*it];
-      almostResult = setUnion(temp, almostResult);
+      // only return stuff if the keyword even exists in the map
+      map<string, set<Product*>>::iterator mapit = keywordProdMap_.find(*it);
+      if (mapit != keywordProdMap_.end()){
+        set<Product*> temp = keywordProdMap_[*it];
+        almostResult = setUnion(almostResult, temp);
+      }
     }
   }
 
@@ -200,5 +223,13 @@ void MyDataStore::dump(std::ostream& ofile){
 
 // destructor
 MyDataStore::~MyDataStore(){
+  // deleting the userSet_
+  for(set<User*>::iterator it = userSet_.begin(); it != userSet_.end(); ++it){
+    delete *it;
+  }
 
+  // deleting the prodSet_
+  for(set<Product*>::iterator it = prodSet_.begin(); it != prodSet_.end(); ++it){
+    delete *it;
+  }
 }
