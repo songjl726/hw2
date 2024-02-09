@@ -30,6 +30,12 @@ std::set<std::string> Book::keywords() const {
   // add in the full isbn without parsing
   result.insert(isbn_); 
 
+  // cout << "parsed book keywords:" << endl;
+  // for(set<string>::iterator it = result.begin(); it != result.end(); ++it){
+  //   cout << *it << " ";
+  // }
+  // cout << endl;
+
   return result;
 }
 

@@ -82,14 +82,25 @@ std::vector<Product*> MyDataStore::search(std::vector<std::string>& terms, int t
   vector<Product*> result;
   set<Product*> almostResult;
   if(type == 0){
-    for(it = parsedTerms.begin(); it != parsedTerms.end(); ++it){
-      set<Product*> temp = keywordProdMap_[*it];
-      almostResult = setIntersection(temp, prodSet_);
+    // AND search means that it must have all terms. so just use the first
+    set<Product*> temp = keywordProdMap_[*parsedTerms.begin()];
+    bool allfound = true;
+    set<Product*>::iterator it2 = temp.begin();
+    for(it2 = temp.begin(); it2 != temp.end(); ++it2){
+      for(it = parsedTerms.begin(); it != parsedTerms.end(); ++it){
+        if((*it2)->keywords().find(*it) == (*it2)->keywords().end()){
+          allfound = false;
+        }
+      }
+
+      if (allfound) {
+        almostResult.insert(*it2);
+      }
     }
   } else if (type == 1) { 
     for(it = parsedTerms.begin(); it != parsedTerms.end(); ++it){
       set<Product*> temp = keywordProdMap_[*it];
-      almostResult = setUnion(temp, prodSet_);
+      almostResult = setUnion(temp, almostResult);
     }
   }
 
