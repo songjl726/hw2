@@ -1,7 +1,6 @@
 #include <iostream>
-#include "datastore.h"
 #include "mydatastore.h"
-
+#include "util.h"
 // 2 maps
   // one is string of a keyword (e.g. "Men") to a set of Products that have that keyword
   // one is a string of the username (e.g. "Tommy Trojan") to a queue of Products in their cart
@@ -24,7 +23,7 @@ void MyDataStore::addProduct(Product* p){
   set<string> currProdKeywords = p->keywords();
 
   // go over all the  keywords in the current product's set of keywords
-  set<string> iterator it;
+  set<string>::iterator it;
   for(it = currProdKeywords.begin(); it != currProdKeywords.end(); ++it){
     // only insert if the keyword DOESN'T already exist in the map
     if(keywordProdMap_.find(*it) == keywordProdMap_.end()){
@@ -43,9 +42,12 @@ void MyDataStore::addProduct(Product* p){
 * Adds a user to the data store
 */
 void MyDataStore::addUser(User* u){
+  // add it to set of User*s (only used during dump)
+  userSet_.insert(u);
+
   // add it to map of string to User*s 
   // make it lowercase so it's case insensitive
-  string currUname = currUname.convToLower(u->getName());
+  string currUname = convToLower(u->getName());
   if(userMap_.find(currUname) == userMap_.end()){
     userMap_.insert(make_pair(currUname, u));
   }
@@ -111,12 +113,13 @@ void MyDataStore::viewCart(std::string uname){
     return;
   }
 
-  int counter = 1;
+  // int counter = 1;
   queue<Product*> cartCopy = userCartMap_[uname];
-  while (!myQueue.empty()) {
-    cout << counter << ": " << (cartCopy.front())->getName() << endl; // get the front element
+  while (!cartCopy.empty()) {
+    // print a call displayString() on the front Product
+    cout << cartCopy.front()->displayString();
     cartCopy.pop(); // remove the front element
-    counter++; // increment the counter so the next item is a number higher
+    // counter++; // increment the counter so the next item is a number higher
   }
 }
 
@@ -155,7 +158,21 @@ void MyDataStore::buyCart(std::string uname){
 * Reproduce the database file from the current Products and User values
 */
 void MyDataStore::dump(std::ostream& ofile){
+  // products section first
+  ofile << "<products>" << endl;
+  set<Product*>::iterator it1;
+  for(it1 = prodSet_.begin(); it1 != prodSet_.end(); ++it1){
+    (*it1)->dump(ofile);
+  }
+  ofile << "</products>" << endl;
 
+  // users section next
+  ofile << "<users>" << endl;
+  set<User*>::iterator it2;
+  for(it2 = userSet_.begin(); it2 != userSet_.end(); ++it2){
+    (*it2)->dump(ofile);
+  }
+  ofile << "</users>" << endl;
 }
 
 // destructor

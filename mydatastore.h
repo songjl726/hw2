@@ -1,12 +1,11 @@
 #ifndef MYDATASTORE_H
 #define MYDATASTORE_H
 #include "datastore.h"
-#include "product.h"
-#include "util.h"
 #include <queue>
 #include <set>
 #include <vector>
 #include <map>
+#include <string>
 #include <iostream>
 
 class MyDataStore : public DataStore {
@@ -47,6 +46,7 @@ public:
 
 private:
   std::map<std::string, User*> userMap_;
+  std::set<User*> userSet_;
   std::set<Product*> prodSet_;
   std::map<std::string, std::queue<Product*>> userCartMap_;
   std::map<std::string, std::set<Product*>> keywordProdMap_;

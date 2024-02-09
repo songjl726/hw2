@@ -2,6 +2,7 @@
 #include <string>
 #include <set>
 #include "movie.h"
+#include "util.h"
 
 using namespace std;
 

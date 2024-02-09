@@ -2,6 +2,7 @@
 #include <string>
 #include <set>
 #include "book.h"
+#include "util.h"
 
 using namespace std;
 

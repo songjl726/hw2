@@ -2,6 +2,7 @@
 #include <string>
 #include <set>
 #include "clothing.h"
+#include "util.h"
 
 using namespace std;
 
