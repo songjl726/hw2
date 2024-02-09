@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <set>
+#include <sstream>
+#include <iomanip>
 #include "movie.h"
 #include "util.h"
 
@@ -29,19 +31,10 @@ std::set<std::string> Movie::keywords() const {
 }
 
 std::string Movie::displayString() const {
-  // yes this is probably the dumbest way you could go about this but... it works
-  string result = name_;
-  result += "\n";
-  result += "Genre: ";
-  result += genre_;
-  result += " Rating: ";
-  result += rating_;
-  result += "\n";
-  result += price_;
-  result += + " "; 
-  result += qty_;
-  result += " left.";
-  return result;
+  // fixed the implementation so it actually works ELL OH ELL
+  stringstream result;
+  result << name_ << "\nGenre: " << genre_ << " Rating: " << rating_ << "\n" << fixed << setprecision(2) << price_ << " " << qty_ << " left.";
+  return result.str();
 }
 
 void Movie::dump(ostream& os) const {

@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <iomanip>
 #include <set>
 #include "book.h"
 #include "util.h"
@@ -32,19 +34,10 @@ std::set<std::string> Book::keywords() const {
 }
 
 std::string Book::displayString() const {
-  // yes this is probably the dumbest way you could go about this but... it works
-  string result = name_;
-  result += "\n";
-  result += "Author: ";
-  result += author_;
-  result += " ISBN: ";
-  result += isbn_;
-  result += "\n";
-  result += price_;
-  result += + " "; 
-  result += qty_;
-  result += " left.";
-  return result;
+  // fixed the implementation so it actually works ELL OH ELL
+  stringstream result;
+  result << name_ << "\nAuthor: " << author_ << " ISBN: " << isbn_ << "\n" << fixed << setprecision(2) << price_ << " " << qty_ << " left.";
+  return result.str();
 }
 
 

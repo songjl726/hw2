@@ -117,7 +117,7 @@ void MyDataStore::viewCart(std::string uname){
   queue<Product*> cartCopy = userCartMap_[uname];
   while (!cartCopy.empty()) {
     // print a call displayString() on the front Product
-    cout << cartCopy.front()->displayString();
+    cout << cartCopy.front()->displayString() << endl;
     cartCopy.pop(); // remove the front element
     // counter++; // increment the counter so the next item is a number higher
   }
