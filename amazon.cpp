@@ -65,7 +65,9 @@ int main(int argc, char* argv[])
     bool done = false;
     while(!done) {
         cout << "\nEnter command: " << endl;
-        string line;
+        string line
+        +
+        +;
         getline(cin,line);
         stringstream ss(line);
         string cmd;
