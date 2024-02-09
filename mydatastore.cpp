@@ -67,16 +67,28 @@ void MyDataStore::addUser(User* u){
 *  type 1 = OR search (union of results for each term)
 */
 std::vector<Product*> MyDataStore::search(std::vector<std::string>& terms, int type){
+  // make a big string of all the strings in the given vector terms
+  // so i can parse it into words with my function
+  string combinedTerms = "";
+  for(size_t i=0; i<terms.size() - 1; i++){
+    combinedTerms = combinedTerms + terms[i] + " ";
+  }
+  combinedTerms += terms[terms.size()-1];
+
+  // call parseStringToWords on this big one
+  set<string> parsedTerms = parseStringToWords(combinedTerms);
+  set<string>::iterator it;
+
   vector<Product*> result;
   set<Product*> almostResult;
   if(type == 0){
-    for(size_t i = 0; i < terms.size(); i++){
-      set<Product*> temp = keywordProdMap_[terms[i]];
+    for(it = parsedTerms.begin(); it != parsedTerms.end(); ++it){
+      set<Product*> temp = keywordProdMap_[*it];
       almostResult = setIntersection(temp, prodSet_);
     }
   } else if (type == 1) { 
-    for(size_t i = 0; i < terms.size(); i++){
-      set<Product*> temp = keywordProdMap_[terms[i]];
+    for(it = parsedTerms.begin(); it != parsedTerms.end(); ++it){
+      set<Product*> temp = keywordProdMap_[*it];
       almostResult = setUnion(temp, prodSet_);
     }
   }
