@@ -1,8 +1,8 @@
 #ifndef MYDATASTORE_H
 #define MYDATASTORE_H
 #include "datastore.h"
-#include "user.h"
 #include "product.h"
+#include "util.h"
 #include <queue>
 #include <set>
 #include <vector>
@@ -41,7 +41,7 @@ public:
 
   // functions that I'm adding on my own (not part of parent class)
   // these are all based on the commands in the menu
-  void addToCart(std::string uname, int hitnum);
+  void addToCart(std::string uname, Product* p);
   void viewCart(std::string uname);
   void buyCart(std::string uname);
 
