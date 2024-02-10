@@ -24,7 +24,7 @@ std::set<std::string> parseStringToWords(string rawWords)
     // replace the apostrophes with spaces so parsing works as intended
     if (lower[i] == '\''){
       lower[i] = ' ';
-    } else if (ispunct(lower[i])){
+    } else if (ispunct(lower[i]) && lower[i] != '-'){
       // remove all other punctuation
       lower.erase(i, 1);
     }

@@ -70,32 +70,13 @@ std::vector<Product*> MyDataStore::search(std::vector<std::string>& terms, int t
   // make a big string of all the strings in the given vector terms
   // so i can parse it into words with my function
   string combinedTerms = "";
-  set<string> isbns;
-  for(size_t i=0; i<terms.size() - 1; i++){
-    string currTerm = terms[i];
-    // check if it's an ISBN number; if it is, skip it
-    if (currTerm.length() == 15){
-      if (currTerm[3] == '-' && currTerm[13] == '-'){
-        isbns.insert(currTerm);
-        i++;
-      } else {
-        combinedTerms += (currTerm + " ");
-      }
-    }
+  for(size_t i = 0; i < terms.size() - 1; i++){
+    combinedTerms += terms[i] + " ";
   }
-  // check if last term is an isbn; if so, skip it
-  if (terms[terms.size()-1].length() == 15){
-    string currTerm = terms[terms.size()-1];
-    if (currTerm[3] == '-' && currTerm[13] == '-'){
-      isbns.insert(currTerm);
-    } else {
-      combinedTerms += terms[terms.size()-1];
-    }
-  } 
+  combinedTerms += terms[terms.size()-1];
 
   // call parseStringToWords on this big one
   set<string> parsedTerms = parseStringToWords(combinedTerms);
-  parsedTerms = setUnion(parsedTerms, isbns);
   set<string>::iterator it;
 
   vector<Product*> result;
