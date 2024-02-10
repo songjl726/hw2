@@ -140,13 +140,14 @@ void MyDataStore::viewCart(std::string uname){
     return;
   }
 
-  // int counter = 1;
+  int counter = 1;
   queue<Product*> cartCopy = userCartMap_[uname];
   while (!cartCopy.empty()) {
     // print a call displayString() on the front Product
+    cout << "Item " << counter << "\n";
     cout << cartCopy.front()->displayString() << endl;
     cartCopy.pop(); // remove the front element
-    // counter++; // increment the counter so the next item is a number higher
+    counter++; // increment the counter so the next item is a number higher
   }
 }
 
@@ -167,12 +168,13 @@ void MyDataStore::buyCart(std::string uname){
     Product* currProd = userCartMap_[uname].front();
     double currProdPrice = currProd->getPrice();
     int currProdQty = currProd->getQty();
-    if(currBalance < currProdPrice || currProdQty <= 0){ // the user CAN'T buy it
+    if(currBalance <= 0 || currBalance < currProdPrice || currProdQty <= 0){ // the user CAN'T buy it
       cartLeftover.push(currProd);
     } else {                                            // the user CAN buy it
       // update the actual data members of the actual objects
       (userCartMap_[uname].front())->subtractQty(1);
       (userMap_[uname])->deductAmount(currProdPrice);
+      currBalance = (userMap_[uname])->getBalance();
     }
     userCartMap_[uname].pop(); // remove the front product, it has been dealt with
   }
